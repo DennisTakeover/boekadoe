@@ -54,6 +54,29 @@ Geeft een regel als `https://iets-random-woorden.trycloudflare.com` — dat is
 de URL die het command center aanroept (met de `X-API-Key` header, zie
 hieronder).
 
+**Als always-on service** (geen open terminal meer nodig, herstart vanzelf
+bij een crash) — nog steeds een *quick tunnel*, dus de URL verandert nog
+steeds bij elke herstart:
+
+```bash
+cp backend/deploy/nl.boekadoe.instagram-lookalike-tunnel.plist ~/Library/LaunchAgents/
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/nl.boekadoe.instagram-lookalike-tunnel.plist
+launchctl kickstart -k gui/$(id -u)/nl.boekadoe.instagram-lookalike-tunnel
+```
+
+Huidige URL opzoeken (na elke herstart verandert 'ie):
+
+```bash
+grep -o 'https://[a-z-]*\.trycloudflare\.com' backend/logs/tunnel.out.log | tail -1
+```
+
+Service herstarten / stoppen:
+
+```bash
+launchctl kickstart -k gui/$(id -u)/nl.boekadoe.instagram-lookalike-tunnel   # herstart (nieuwe URL!)
+launchctl bootout gui/$(id -u)/nl.boekadoe.instagram-lookalike-tunnel        # stoppen
+```
+
 **Permanent** (stabiele URL, bv. `api-lookalikes.boekadoe.nl`) — vereist een
 domein dat al in jullie Cloudflare-account zit:
 

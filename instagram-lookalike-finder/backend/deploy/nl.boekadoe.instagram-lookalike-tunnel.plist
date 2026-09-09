@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>nl.boekadoe.instagram-lookalike-tunnel</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/opt/homebrew/bin/cloudflared</string>
+        <string>tunnel</string>
+        <string>--url</string>
+        <string>http://localhost:8000</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/area51-bot/boekadoe/instagram-lookalike-finder/backend</string>
+
+    <!-- Start as soon as this is loaded (incl. on login) and restart it
+         automatically whenever the process exits or crashes. NOTE: this is
+         a free "quick tunnel" (no Cloudflare account) — every restart gets a
+         *new* random *.trycloudflare.com URL. Check the log below for the
+         current one after each restart. For a URL that never changes, this
+         needs to become a named tunnel (own Cloudflare domain) instead. -->
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/Users/area51-bot/boekadoe/instagram-lookalike-finder/backend/logs/tunnel.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/area51-bot/boekadoe/instagram-lookalike-finder/backend/logs/tunnel.err.log</string>
+</dict>
+</plist>

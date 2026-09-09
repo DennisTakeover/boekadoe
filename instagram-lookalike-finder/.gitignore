@@ -10,6 +10,9 @@ venv/
 # login session. Never commit ig_session.json: it's an active login token.
 backend/data/
 
+# launchd service logs (backend + cloudflared tunnel)
+backend/logs/
+
 # Environment files with real credentials/API keys
 .env
 backend/.env
