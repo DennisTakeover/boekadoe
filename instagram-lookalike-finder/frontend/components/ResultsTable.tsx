@@ -34,8 +34,11 @@ export default function ResultsTable({ candidates }: { candidates: Candidate[] }
             <th className="sortable" onClick={() => headerClick("followers")}>
               Followers
             </th>
-            <th>Land</th>
+            <th>Land / stad</th>
             <th>Niche</th>
+            <th>Type</th>
+            <th>Contact</th>
+            <th>Links</th>
             <th className="sortable" onClick={() => headerClick("similarity_score")}>
               Score
             </th>
@@ -54,9 +57,37 @@ export default function ResultsTable({ candidates }: { candidates: Candidate[] }
                 </a>
               </td>
               <td>{c.followers.toLocaleString("nl-NL")}</td>
-              <td>{c.country ? `${c.country} (${c.country_confidence}%)` : "-"}</td>
-              <td>{c.niche_primary ?? "-"}</td>
-              <td>{c.similarity_score}</td>
+              <td>
+                {c.country ? `${c.country} (${c.country_confidence}%)` : "-"}
+                {c.city_name ? ` · ${c.city_name}` : ""}
+              </td>
+              <td>
+                {c.niche_primary ? <span className="badge badge--niche">{c.niche_primary}</span> : "-"}
+              </td>
+              <td>
+                {c.account_type_name ? <span className="badge badge--muted">{c.account_type_name}</span> : "-"}
+              </td>
+              <td>
+                {c.public_email && <div>{c.public_email}</div>}
+                {c.public_phone_number && (
+                  <div>
+                    +{c.public_phone_country_code} {c.public_phone_number}
+                  </div>
+                )}
+                {!c.public_email && !c.public_phone_number && "-"}
+              </td>
+              <td>
+                {c.bio_links.length > 0
+                  ? c.bio_links.map((l) => (
+                      <a key={l.url} href={l.url} target="_blank" rel="noreferrer" title={l.title} style={{ marginRight: 4 }}>
+                        🔗
+                      </a>
+                    ))
+                  : "-"}
+              </td>
+              <td>
+                <span className="badge badge--score">{c.similarity_score}</span>
+              </td>
               <td>{c.seed_overlap}</td>
               <td>{c.found_via.map((s) => `@${s}`).join(", ")}</td>
             </tr>

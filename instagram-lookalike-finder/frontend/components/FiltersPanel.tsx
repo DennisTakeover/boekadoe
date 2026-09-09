@@ -50,7 +50,7 @@ export default function FiltersPanel({ filters, onChange, countryOptions, nicheO
       {countryOptions.length > 0 && (
         <div className="filter-group">
           <label>Land</label>
-          <div className="checkbox-list">
+          <div className="chip-list">
             {countryOptions.map((country) => (
               <label key={country} className="checkbox">
                 <input
@@ -68,7 +68,7 @@ export default function FiltersPanel({ filters, onChange, countryOptions, nicheO
       {nicheOptions.length > 0 && (
         <div className="filter-group">
           <label>Niche</label>
-          <div className="checkbox-list">
+          <div className="chip-list">
             {nicheOptions.map((niche) => (
               <label key={niche} className="checkbox">
                 <input

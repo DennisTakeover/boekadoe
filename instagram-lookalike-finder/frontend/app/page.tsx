@@ -1,9 +1,19 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 
-import { createRun } from "../lib/api";
+import { createRun, listRuns, type RunStatus } from "../lib/api";
+
+const STATUS_LABELS: Record<RunStatus["status"], string> = {
+  queued: "wachtrij",
+  discovering: "data ophalen...",
+  discovered: "klaar voor AI matchmaking",
+  matchmaking: "AI matchmaking...",
+  done: "klaar",
+  error: "mislukt",
+};
 
 export default function HomePage() {
   const router = useRouter();
@@ -11,6 +21,13 @@ export default function HomePage() {
   const [desiredResults, setDesiredResults] = useState(500);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [recentRuns, setRecentRuns] = useState<RunStatus[]>([]);
+
+  useEffect(() => {
+    listRuns()
+      .then(setRecentRuns)
+      .catch(() => setRecentRuns([]));
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -39,7 +56,8 @@ export default function HomePage() {
   return (
     <main className="page">
       <div className="card">
-        <h1>Instagram Lookalike Finder</h1>
+        <span className="eyebrow">Instagram · Lookalikes</span>
+        <h1>Vind je volgende doelgroep</h1>
         <p className="subtitle">
           Voer een paar goede seed-accounts in (concurrenten, influencers). Instagram&apos;s eigen
           aanbevelingen bepalen de kandidaten — wij bouwen daar een recommendation graph, similarity
@@ -72,6 +90,21 @@ export default function HomePage() {
           </button>
         </form>
       </div>
+
+      {recentRuns.length > 0 && (
+        <div className="card">
+          <span className="eyebrow">Eerdere runs</span>
+          <h2>Terug naar een resultaat</h2>
+          <ul className="run-list">
+            {recentRuns.map((run) => (
+              <li key={run.id}>
+                <Link href={`/runs/${run.id}`}>{run.seeds.join(", ")}</Link>
+                <span className="run-list__status">{STATUS_LABELS[run.status] ?? run.status}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </main>
   );
 }
