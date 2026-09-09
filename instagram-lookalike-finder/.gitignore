@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Backend runtime data — SQLite DB and, critically, the persisted Instagram
+# login session. Never commit ig_session.json: it's an active login token.
+backend/data/
+
+# Environment files with real credentials/API keys
+.env
+backend/.env
+frontend/.env.local
+
+# Node / Next.js
+node_modules/
+frontend/.next/
+frontend/out/
+
+# Editors / OS
+.DS_Store
+.vscode/
