@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>nl.boekadoe.instagram-lookalike-backend</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/area51-bot/boekadoe/instagram-lookalike-finder/backend/.venv/bin/uvicorn</string>
+        <string>app.main:app</string>
+        <string>--host</string>
+        <string>0.0.0.0</string>
+        <string>--port</string>
+        <string>8000</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/area51-bot/boekadoe/instagram-lookalike-finder/backend</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/Users/area51-bot/boekadoe/instagram-lookalike-finder/backend/.venv/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+
+    <!-- Start as soon as this is loaded (incl. on login) and restart it
+         automatically whenever the process exits or crashes. -->
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/Users/area51-bot/boekadoe/instagram-lookalike-finder/backend/logs/service.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/area51-bot/boekadoe/instagram-lookalike-finder/backend/logs/service.err.log</string>
+
+    <!-- No --reload here (that's a dev-server feature): after editing code,
+         restart the service explicitly — see README "Command center / Mac
+         Mini deploy" for the launchctl kickstart command. -->
+</dict>
+</plist>

@@ -38,6 +38,28 @@ Zonder Instagram-credentials (of met `USE_MOCK_ADAPTER=true`) draait de hele
 pipeline tegen een ingebouwde nep-adapter, handig om lokaal te ontwikkelen
 of te demonstreren zonder enig IG-risico.
 
+### "challenge_required" bij een verse account+wachtwoord-login
+
+Instagram's private login-endpoint (`accounts/login/`) herkent dit soort
+scripted logins vrijwel altijd als een onbekend toestel en blokkeert de
+eerste poging(en) met een `native_flow`-checkpoint. aiograpi lost dit type
+checkpoint bewust niet automatisch op — nog een keer proberen (ook vanaf
+een ander netwerk, of na inloggen in de officiële app) verandert daar
+niets aan, want *het inlog-endpoint zelf* triggert de check.
+
+Workaround: **`INSTAGRAM_SESSIONID`** in `.env`. Log normaal in op
+instagram.com in een browser (dat verloopt via een veel soepeler flow),
+kopieer daarna de `sessionid`-cookie (devtools → Application/Storage →
+Cookies → instagram.com) en zet die in `.env`. De adapter gebruikt dan
+`login_by_sessionid()` in plaats van `accounts/login/` — geen
+device-check, dus geen checkpoint. Die cookie verloopt na verloop van tijd
+(grofweg enkele weken); ververs 'm dan opnieuw op dezelfde manier.
+
+Eenmaal ingelogd (via wachtwoord of sessionid) hergebruikt de adapter de
+opgeslagen sessie (`data/ig_session.json`) en logt hij niet opnieuw in
+zolang die nog geldig is — elke herstart doet dus geen nieuwe
+device-login-poging.
+
 ## Architectuur
 
 ```
@@ -117,6 +139,18 @@ docker compose up --build
 Google Sheets-export (`POST /runs/{id}/export/sheets?spreadsheet_id=...`) is
 aanwezig maar staat uit totdat je `GOOGLE_SERVICE_ACCOUNT_JSON` instelt op
 een service-account key die als editor is toegevoegd aan de doelsheet.
+
+## Command center / always-on deploy
+
+Deze tool draait niet als losse webapp maar wordt aangeroepen vanuit het
+Boekadoe command center, via de backend-API op een always-on Mac Mini
+(launchd-service + Cloudflare Tunnel, geen los gehoste frontend nodig). Zie
+[`backend/deploy/README.md`](backend/deploy/README.md) voor de setup, en
+`API_KEY` in `backend/.env` voor de shared-secret die elke aanroep van
+buiten localhost nodig heeft (header `X-API-Key`).
+
+**API-referentie voor het command center:** [`backend/API.md`](backend/API.md)
+(interactieve versie op `<base-url>/docs`).
 
 ## Bekende beperkingen (V1) / ideeën voor V2
 
