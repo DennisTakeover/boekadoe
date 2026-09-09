@@ -40,6 +40,16 @@ _FALLBACK = {
 }
 
 
+def _strip_markdown_fence(text: str) -> str:
+    """Claude sometimes wraps JSON in ```json ... ``` despite being told not to."""
+    text = text.strip()
+    if text.startswith("```"):
+        text = text.split("\n", 1)[1] if "\n" in text else text[3:]
+        if text.endswith("```"):
+            text = text[: -3]
+    return text.strip()
+
+
 async def classify_niche(
     username: str,
     full_name: str,
@@ -65,7 +75,7 @@ async def classify_niche(
                 system=SYSTEM_PROMPT,
                 messages=[{"role": "user", "content": prompt}],
             )
-            text = resp.content[0].text.strip()
+            text = _strip_markdown_fence(resp.content[0].text)
             data = json.loads(text)
             return {
                 "primary_niche": str(data.get("primary_niche") or "unknown"),

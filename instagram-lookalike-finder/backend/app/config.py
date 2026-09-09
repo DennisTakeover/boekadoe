@@ -11,6 +11,11 @@ class Settings(BaseSettings):
     instagram_username: str | None = None
     instagram_password: str | None = None
     instagram_totp_seed: str | None = None  # optional, for accounts with TOTP 2FA
+    # Alternative to username+password: a `sessionid` cookie value lifted from an
+    # already-logged-in browser session. Sidesteps the private accounts/login/
+    # endpoint entirely (see aiograpi_adapter.py) — the workaround for the
+    # "native_flow" device-login challenge that a fresh password login can trigger.
+    instagram_sessionid: str | None = None
     instagram_session_path: str = "data/ig_session.json"
     ig_min_delay_seconds: float = 2.0
     ig_max_delay_seconds: float = 4.5
@@ -32,6 +37,12 @@ class Settings(BaseSettings):
 
     # --- API ---
     cors_origins: str = "http://localhost:3000"
+    # Shared-secret required (as `X-API-Key` header) on every request once the
+    # tool is reachable from outside localhost (e.g. via a Cloudflare Tunnel
+    # for the command center) — otherwise anyone with the URL could trigger
+    # real Instagram scraping on the shared account and read scraped PII.
+    # Leave empty to disable (local-only dev, e.g. `npm run dev` on localhost).
+    api_key: str | None = None
 
     @property
     def cors_origin_list(self) -> list[str]:

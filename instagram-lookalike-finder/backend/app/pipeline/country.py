@@ -64,7 +64,20 @@ LANG_WEIGHT = 15
 MAX_CONFIDENCE = 98
 
 
-def classify_country(bio: str | None, external_url: str | None) -> dict:
+def classify_country(bio: str | None, external_url: str | None, ig_city_name: str | None = None) -> dict:
+    # Instagram's own (business/creator) location field, when set, is a fact
+    # from the platform rather than a heuristic on free text — it wins
+    # outright over bio/TLD/language guesses instead of just adding to them.
+    if ig_city_name:
+        city_lower = ig_city_name.lower()
+        for keyword, code in CITY_KEYWORDS_TO_CODE.items():
+            if keyword in city_lower:
+                return {
+                    "country": COUNTRY_NAMES[code],
+                    "confidence": MAX_CONFIDENCE,
+                    "signals": [f"Instagram city field '{ig_city_name}' -> {COUNTRY_NAMES[code]}"],
+                }
+
     text = bio or ""
     lower = text.lower()
     scores: dict[str, int] = defaultdict(int)

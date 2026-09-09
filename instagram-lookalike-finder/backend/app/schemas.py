@@ -22,6 +22,11 @@ class RunOut(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class BioLinkOut(BaseModel):
+    title: str
+    url: str
+
+
 class CandidateOut(BaseModel):
     username: str
     full_name: str
@@ -35,6 +40,31 @@ class CandidateOut(BaseModel):
     is_business: bool
     is_private: bool
     profile_pic_url: str | None
+    profile_pic_url_hd: str | None
+
+    # Extra public data points, for matching beyond the basics.
+    bio_links: list[BioLinkOut]
+    account_type: int | None
+    account_type_name: str | None
+    category_name: str | None
+    business_category_name: str | None
+    business_contact_method: str | None
+    public_email: str | None
+    public_phone_country_code: str | None
+    public_phone_number: str | None
+    contact_phone_number: str | None
+    address_street: str | None
+    city_name: str | None
+    city_id: str | None
+    zip_code: str | None
+    latitude: float | None
+    longitude: float | None
+    instagram_location_id: str | None
+    has_threads_badge: bool
+    threads_badge_label: str | None
+    has_broadcast_channel: bool
+    interop_messaging_user_fbid: str | None
+
     similarity_score: int
     seed_overlap: int
     found_via: list[str]

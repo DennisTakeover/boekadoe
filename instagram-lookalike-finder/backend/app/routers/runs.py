@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from ..db import SessionLocal, get_db
 from ..export import candidates_to_csv, export_to_google_sheets
 from ..models import Candidate, Run
-from ..pipeline.runner import run_pipeline
+from ..pipeline.runner import MATCHMAKING_READY_STATUSES, run_discovery, run_matchmaking
 from ..schemas import CandidateOut, CreateRunRequest, RunOut
 
 router = APIRouter(prefix="/runs", tags=["runs"])
@@ -23,13 +23,36 @@ def create_run(payload: CreateRunRequest, background_tasks: BackgroundTasks, req
     db.refresh(run)
 
     adapter = request.app.state.instagram_adapter
-    background_tasks.add_task(run_pipeline, run.id, adapter, SessionLocal)
+    background_tasks.add_task(run_discovery, run.id, adapter, SessionLocal)
     return run
 
 
 @router.get("", response_model=list[RunOut])
 def list_runs(db: Session = Depends(get_db)):
     return db.query(Run).order_by(Run.created_at.desc()).limit(50).all()
+
+
+@router.post("/{run_id}/matchmaking", response_model=RunOut)
+def start_matchmaking(run_id: str, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    """Phase 2: kick off AI niche classification / matchmaking reasoning over
+    an already-discovered run's candidates. Separate from POST /runs (phase 1,
+    discovery) so you can inspect the raw list — or re-run this phase alone —
+    without re-hitting Instagram."""
+    run = db.get(Run, run_id)
+    if run is None:
+        raise HTTPException(404, "Run niet gevonden")
+    if run.status not in MATCHMAKING_READY_STATUSES:
+        raise HTTPException(
+            409,
+            f"Run staat op status '{run.status}' — matchmaking kan pas nadat fase 1 (data ophalen) is afgerond.",
+        )
+
+    run.status = "matchmaking"
+    db.commit()
+    db.refresh(run)
+
+    background_tasks.add_task(run_matchmaking, run.id, SessionLocal)
+    return run
 
 
 @router.get("/{run_id}", response_model=RunOut)
