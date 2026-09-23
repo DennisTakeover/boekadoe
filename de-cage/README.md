@@ -15,34 +15,52 @@ anderen ook admin maken via de Admin-pagina.
 
 ## Lokaal draaien (bijv. op de Mac Mini)
 
-Je hebt alleen **Node.js 22.5 of nieuwer** nodig. Er zijn geen npm-packages en geen
-`npm install`. De database is SQLite en zit ingebouwd in Node.
+Je hebt **Node.js 20 of nieuwer** nodig (`node -v`; anders `brew install node`).
 
 ```bash
-node -v                # moet v22.5 of hoger zijn (anders: brew install node)
 git clone https://github.com/DennisTakeover/boekadoe.git
 cd boekadoe
 git checkout claude/practical-wozniak-ntgr2h
 cd de-cage
-npm start
+npm install
+npm run dev        # herstart vanzelf als je code aanpast (of: npm start)
 ```
 
 Open daarna <http://localhost:3000> en maak als eerste je eigen (admin-)account aan.
 
-Alle data staat in `de-cage/data/cage.db`. Maak daar af en toe een kopie van als backup.
+Lokaal staat alle data in `de-cage/data/cage.db`: gewoon een SQLite-bestand, er hoeft
+niets extra geïnstalleerd te worden. Wil je opnieuw beginnen? Stop de server en
+verwijder de map `data/`.
 
-### Instellingen (optioneel, via environment variables)
+## Online zetten met Vercel + GitHub
 
-| Variabele       | Standaard        | Uitleg                                                      |
-|-----------------|------------------|-------------------------------------------------------------|
-| `PORT`          | `3000`           | Poort van de webserver                                      |
-| `DB_FILE`       | `data/cage.db`   | Pad naar de database                                        |
-| `ADMIN_EMAILS`  | –                | Komma-gescheiden e-mails die bij registratie admin worden   |
-| `SECURE_COOKIE` | –                | Zet op `1` zodra de app via https draait                    |
+Vercel draait de app "serverless". Er is daar geen vaste schijf, dus de database moet
+ergens anders staan. We gebruiken **Turso**: gratis, en het is dezelfde SQLite die je
+lokaal gebruikt. De code blijft dus gelijk. Alleen twee environment variables verschillen.
 
-Wil je dat de andere leden erbij kunnen? Dan moet de app online komen. Dat kan met een
-Cloudflare Tunnel vanaf de Mac Mini (zie de launchd-setup in `instagram-lookalike-finder`)
-of via een host als Railway. Zet dan `SECURE_COOKIE=1`.
+1. **Vercel-project aanmaken.** Kies op vercel.com *Add New → Project*, importeer de
+   GitHub-repo `boekadoe` en zet **Root Directory** op `de-cage`. Framework Preset is
+   "Other", en build-instellingen hoef je niet te wijzigen.
+2. **Database koppelen.** Ga in het Vercel-project naar *Storage* (of de *Marketplace*),
+   kies **Turso** en maak een database aan. Vercel zet dan zelf `TURSO_DATABASE_URL` en
+   `TURSO_AUTH_TOKEN` klaar. Doe je het liever handmatig via turso.tech? Zet die twee
+   variabelen dan zelf onder *Settings → Environment Variables*.
+3. **Deploy.** Elke `git push` naar GitHub zet daarna automatisch een nieuwe versie online.
+4. Maak op de live-site als eerste je eigen account aan: dat wordt admin. Of zet
+   `ADMIN_EMAILS=jouw@email.nl` in Vercel.
+
+De tabellen worden bij het eerste bezoek automatisch aangemaakt. Op Vercel staan
+cookies automatisch op `Secure` (https).
+
+### Instellingen (environment variables)
+
+| Variabele            | Standaard        | Uitleg                                                     |
+|----------------------|------------------|------------------------------------------------------------|
+| `TURSO_DATABASE_URL` | –                | Online database. Leeg = lokaal bestand `data/cage.db`       |
+| `TURSO_AUTH_TOKEN`   | –                | Token bij de Turso-database                                |
+| `ADMIN_EMAILS`       | –                | Komma-gescheiden e-mails die bij registratie admin worden  |
+| `PORT`               | `3000`           | Poort lokaal                                               |
+| `DB_FILE`            | `data/cage.db`   | Pad naar het lokale databasebestand                        |
 
 ## Hoe werkt het indelingsalgoritme?
 
