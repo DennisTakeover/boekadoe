@@ -1,0 +1,12 @@
+{
+  "name": "de-cage",
+  "version": "1.0.0",
+  "description": "Padel web app voor vereniging De Cage: profielen, speeldagen, automatische indeling, scores en ratings.",
+  "main": "server.js",
+  "type": "commonjs",
+  "engines": { "node": ">=22.5" },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server.js",
+    "test": "node --disable-warning=ExperimentalWarning --test"
+  }
+}
