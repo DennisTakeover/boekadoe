@@ -1,7 +1,14 @@
 fastapi>=0.115
 uvicorn[standard]>=0.30
 sqlalchemy>=2.0
-psycopg2-binary>=2.9   # only needed if DATABASE_URL points at Postgres (e.g. via docker-compose)
+# Postgres drivers — only needed if DATABASE_URL points at Postgres (e.g. via
+# docker-compose or Railway). Both are included because the dialect SQLAlchemy
+# tries to import depends on the DATABASE_URL scheme: bare "postgresql://" or
+# "postgresql+psycopg2://" needs psycopg2-binary, while "postgresql+psycopg://"
+# (psycopg v3) needs psycopg[binary] — a crash with "No module named 'psycopg'"
+# or "No module named 'psycopg2'" means only the other one was installed.
+psycopg2-binary>=2.9
+psycopg[binary]>=3.1
 pydantic>=2.7
 pydantic-settings>=2.4
 python-dotenv>=1.0
