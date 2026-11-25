@@ -1,0 +1,418 @@
+<title>Grabkeuze Bangkok</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: one narrow phone column; quiz cards swap in place, results stack as tickets. */
+:root{
+  --bg:#F1F4EF; --surface:#FFFFFF; --ink:#18211C; --muted:#5D6B62; --line:#D8DFD6;
+  --chili:#C8361C; --chili-soft:#FBE4DE; --basil:#2C6A4C; --basil-soft:#DDEDE3; --star:#E0A100;
+  --display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body:"Inter", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111613; --surface:#1A211D; --ink:#E7EDE8; --muted:#9AA89F; --line:#2C3631;
+  --chili:#FF6447; --chili-soft:#3A1E18; --basil:#6CC89A; --basil-soft:#1D3328; --star:#F2C14E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111613; --surface:#1A211D; --ink:#E7EDE8; --muted:#9AA89F; --line:#2C3631;
+  --chili:#FF6447; --chili-soft:#3A1E18; --basil:#6CC89A; --basil-soft:#1D3328; --star:#F2C14E; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:520px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1}
+h1{font-size:2.1rem;font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.5rem;font-weight:800}
+h3{font-size:1.15rem;font-weight:600}
+p{margin:0}
+.muted{color:var(--muted)}
+.eyebrow{font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;font-weight:600;color:var(--chili)}
+header.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{font-family:var(--display);font-weight:800;font-size:1.15rem}
+.logo b{color:var(--chili)}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:.75rem;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--basil-soft);color:var(--basil)}
+.pill.red{background:var(--chili-soft);color:var(--chili)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--basil);outline-offset:2px}
+.btn{border:0;border-radius:14px;padding:14px 18px;font-weight:600;background:var(--chili);color:#fff;font-size:1rem}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.small{padding:9px 13px;font-size:.88rem;border-radius:11px}
+.btn:disabled{opacity:.5;cursor:default}
+.progress{display:flex;gap:5px}
+.progress i{flex:1;height:5px;border-radius:3px;background:var(--line)}
+.progress i.on{background:var(--chili)}
+.q{display:flex;flex-direction:column;gap:14px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:16px 14px;text-align:left;display:flex;flex-direction:column;gap:2px;min-width:0;transition:border-color .15s,transform .15s}
+.opt:hover{border-color:var(--chili)}
+.opt:active{transform:scale(.98)}
+.opt strong{font-size:1rem}
+.opt span{font-size:.82rem;color:var(--muted)}
+.opt.wide{grid-column:1/-1}
+.navrow{display:flex;justify-content:space-between;align-items:center}
+.linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;padding:6px 0}
+.hero{display:flex;flex-direction:column;gap:12px;padding:22px;border-radius:22px;background:var(--surface);border:1px solid var(--line)}
+.ticket{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.ticket.best{border:2px solid var(--chili)}
+.trow{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.trow > div{min-width:0}
+.match{font-family:var(--display);font-weight:800;font-size:1.6rem;color:var(--chili);font-variant-numeric:tabular-nums;line-height:1}
+.match small{display:block;font-family:var(--body);font-size:.68rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.why{font-size:.88rem;color:var(--muted)}
+.dish{font-size:.9rem}
+.dish b{font-weight:600}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.stars{color:var(--star);letter-spacing:1px}
+.rev{display:flex;gap:10px;align-items:flex-start;border-top:1px dashed var(--line);padding-top:10px}
+.rev img{width:72px;height:72px;object-fit:cover;border-radius:10px;flex-shrink:0;background:var(--line)}
+.rev > div{min-width:0}
+.rev p{font-size:.9rem;overflow-wrap:anywhere}
+.rev .who{font-size:.78rem;color:var(--muted)}
+.wall{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory}
+.wcard{flex:0 0 220px;scroll-snap-align:start;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+.wcard img{width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--line);max-width:100%}
+.wcard .noimg{aspect-ratio:4/3;display:grid;place-items:center;background:var(--basil-soft);color:var(--basil);font-family:var(--display);font-weight:800;font-size:1.3rem;padding:12px;text-align:center}
+.wcard .wb{padding:12px;display:flex;flex-direction:column;gap:4px}
+.wcard p{font-size:.88rem;overflow-wrap:anywhere}
+.empty{padding:18px;border:1.5px dashed var(--line);border-radius:16px;color:var(--muted);font-size:.92rem}
+form.review{display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--line);padding-top:12px}
+label{font-size:.82rem;font-weight:600}
+textarea,input[type=text]{width:100%;font:inherit;padding:10px 12px;border-radius:11px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+textarea{min-height:84px;resize:vertical}
+.starpick{display:flex;gap:4px}
+.starpick button{background:none;border:0;font-size:1.7rem;line-height:1;color:var(--line);padding:2px}
+.starpick button.on{color:var(--star)}
+.photo-prev{width:100%;max-height:220px;object-fit:cover;border-radius:12px}
+.note{font-size:.78rem;color:var(--muted)}
+.status{font-size:.86rem;font-weight:600;color:var(--basil)}
+.status.err{color:var(--chili)}
+footer{font-size:.78rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap" id="app">
+  <header class="top">
+    <div class="logo">grab<b>keuze</b></div>
+    <span class="pill">Bangkok</span>
+  </header>
+  <main id="view"></main>
+  <footer>Demo: de restaurantlijst is een voorbeeldlijst (deels fictieve namen) en nog niet live gekoppeld aan Grab. Reviews en foto's komen van echte gebruikers van deze app.</footer>
+</div>
+
+<script>
+/* ---------- Restaurantdata (demo) ---------- */
+// cuisine: thai | asian | western | indian ; price 1-3 ; spicy 0-2 ; heavy 0-2 (0 licht, 2 comfort) ; size: porties 0-2
+const RESTAURANTS = [
+  {id:"thipsamai",name:"Thipsamai Pad Thai",area:"Phra Nakhon",cuisine:"thai",price:1,spicy:0,heavy:2,size:1,veg:true,halal:false,dish:"Pad thai met garnalen in ei-omelet",tags:["klassieker","noedels"]},
+  {id:"goang",name:"Go-Ang Pratunam Chicken Rice",area:"Pratunam",cuisine:"thai",price:1,spicy:0,heavy:1,size:1,veg:false,halal:false,dish:"Khao man gai (kip met rijst)",tags:["snel","comfort"]},
+  {id:"somtamder",name:"Somtam Der",area:"Sala Daeng",cuisine:"thai",price:2,spicy:2,heavy:0,size:1,veg:false,halal:false,dish:"Som tam + gegrilde kip (gai yang)",tags:["Isaan","fris & pittig"]},
+  {id:"kruaapsorn",name:"Krua Apsorn",area:"Dusit",cuisine:"thai",price:2,spicy:1,heavy:1,size:2,veg:false,halal:false,dish:"Krabomelet en gele curry met lotus",tags:["huiskeuken","delen"]},
+  {id:"naiek",name:"Nai Ek Roll Noodles",area:"Chinatown",cuisine:"thai",price:1,spicy:1,heavy:1,size:1,veg:false,halal:false,dish:"Kuay jab (peper-noedelsoep)",tags:["soep","late night"]},
+  {id:"jeekim",name:"Jeh O Chula",area:"Banthat Thong",cuisine:"thai",price:2,spicy:2,heavy:2,size:2,veg:false,halal:false,dish:"Mama tom yum noedels in de pot",tags:["late night","vuur"]},
+  {id:"veganthai",name:"May Veggie Home",area:"Asok",cuisine:"thai",price:2,spicy:1,heavy:0,size:1,veg:true,halal:true,dish:"Groene curry met tofu",tags:["vegan","licht"]},
+  {id:"khaosoi",name:"Khao Soi Nimman BKK",area:"Ari",cuisine:"thai",price:1,spicy:1,heavy:2,size:1,veg:false,halal:true,dish:"Khao soi met kippenpoot",tags:["noord-Thais","curry"]},
+  {id:"bannmassaman",name:"Muslim Restaurant Bang Rak",area:"Bang Rak",cuisine:"thai",price:1,spicy:1,heavy:2,size:2,veg:false,halal:true,dish:"Massaman curry + roti",tags:["halal","sinds 1940"]},
+  {id:"pokebowl",name:"Pokéworks Thonglor",area:"Thonglor",cuisine:"asian",price:2,spicy:0,heavy:0,size:1,veg:true,halal:false,dish:"Zalm-poke bowl",tags:["gezond","bowl"]},
+  {id:"ramen",name:"Bankara Ramen",area:"Phrom Phong",cuisine:"asian",price:2,spicy:0,heavy:2,size:2,veg:false,halal:false,dish:"Tonkotsu ramen met chashu",tags:["Japans","comfort"]},
+  {id:"sushi",name:"Sushi Masa",area:"Sukhumvit 39",cuisine:"asian",price:3,spicy:0,heavy:0,size:1,veg:false,halal:false,dish:"Chirashi bowl",tags:["Japans","vers"]},
+  {id:"korean",name:"Kang Ho-dong Baekjeong",area:"Sukhumvit Plus",cuisine:"asian",price:3,spicy:1,heavy:2,size:2,veg:false,halal:false,dish:"Korean BBQ-box met kimchi",tags:["Koreaans","feest"]},
+  {id:"dimsum",name:"Hong Kong Dim Sum",area:"Silom",cuisine:"asian",price:2,spicy:0,heavy:1,size:1,veg:false,halal:false,dish:"Har gow, siu mai en char siu bao",tags:["Chinees","delen"]},
+  {id:"bibimbap",name:"Seoul Kitchen Ari",area:"Ari",cuisine:"asian",price:2,spicy:1,heavy:0,size:1,veg:true,halal:false,dish:"Bibimbap met tofu",tags:["Koreaans","gebalanceerd"]},
+  {id:"tteok",name:"Yupdduk Bangkok",area:"Siam",cuisine:"asian",price:2,spicy:2,heavy:2,size:2,veg:false,halal:false,dish:"Extreem pittige tteokbokki",tags:["Koreaans","vuur"]},
+  {id:"burger",name:"Daniel Thaiger",area:"Sukhumvit 11",cuisine:"western",price:2,spicy:0,heavy:2,size:2,veg:false,halal:false,dish:"Smash burger met friet",tags:["burger","comfort"]},
+  {id:"pizza",name:"Peppina",area:"Sukhumvit 33",cuisine:"western",price:3,spicy:0,heavy:2,size:2,veg:true,halal:false,dish:"Napolitaanse margherita",tags:["pizza","Italiaans"]},
+  {id:"salad",name:"Salad Factory",area:"Siam",cuisine:"western",price:2,spicy:0,heavy:0,size:1,veg:true,halal:true,dish:"Caesar salade met gegrilde kip",tags:["gezond","licht"]},
+  {id:"tacos",name:"Taco Shack BKK",area:"Ekkamai",cuisine:"western",price:2,spicy:1,heavy:1,size:1,veg:true,halal:false,dish:"Birria tacos",tags:["Mexicaans"]},
+  {id:"wings",name:"Wing Stop Asok",area:"Asok",cuisine:"western",price:2,spicy:2,heavy:2,size:2,veg:false,halal:false,dish:"Buffalo wings, extra hot",tags:["vuur","snack"]},
+  {id:"brunch",name:"Roast Coffee & Eatery",area:"Thonglor",cuisine:"western",price:3,spicy:0,heavy:1,size:1,veg:true,halal:false,dish:"Avocado toast met gepocheerd ei",tags:["brunch","licht"]},
+  {id:"indian",name:"Indian Hut",area:"Sathorn",cuisine:"indian",price:2,spicy:1,heavy:2,size:2,veg:true,halal:true,dish:"Butter chicken + garlic naan",tags:["Indiaas","halal"]},
+  {id:"dosa",name:"Saravana Bhavan",area:"Sukhumvit 11",cuisine:"indian",price:1,spicy:1,heavy:1,size:1,veg:true,halal:true,dish:"Masala dosa met sambar",tags:["vegetarisch","Zuid-Indiaas"]},
+  {id:"shawarma",name:"Nana Shawarma House",area:"Nana",cuisine:"indian",price:1,spicy:0,heavy:1,size:1,veg:false,halal:true,dish:"Kip-shawarma wrap",tags:["Midden-Oosten","snel"]},
+  {id:"falafel",name:"Beirut Express",area:"Ploenchit",cuisine:"indian",price:2,spicy:0,heavy:0,size:1,veg:true,halal:true,dish:"Falafel-bowl met hummus",tags:["Libanees","licht"]},
+  {id:"biryani",name:"Biryani Pot",area:"Silom",cuisine:"indian",price:2,spicy:2,heavy:2,size:2,veg:false,halal:true,dish:"Hyderabadi lamsbiryani",tags:["halal","vuur"]},
+  {id:"mango",name:"Mae Varee",area:"Thonglor",cuisine:"thai",price:1,spicy:0,heavy:1,size:0,veg:true,halal:true,dish:"Mango sticky rice",tags:["dessert","snack"]},
+  {id:"satay",name:"Satay Ari",area:"Ari",cuisine:"thai",price:1,spicy:0,heavy:1,size:0,veg:false,halal:true,dish:"Kip-saté met pindasaus",tags:["snack","straat"]},
+  {id:"gyoza",name:"Gyoza Bar Ekkamai",area:"Ekkamai",cuisine:"asian",price:1,spicy:0,heavy:1,size:0,veg:true,halal:false,dish:"Groente-gyoza (8 stuks)",tags:["Japans","snack"]},
+];
+
+/* ---------- Quiz ---------- */
+const QUESTIONS = [
+  {key:"cuisine",title:"Waar heb je zin in?",opts:[
+    {v:"thai",t:"Thais",s:"Curry, noedels, som tam"},
+    {v:"asian",t:"Japans / Koreaans / Chinees",s:"Ramen, sushi, dim sum"},
+    {v:"western",t:"Westers",s:"Burger, pizza, salade"},
+    {v:"indian",t:"Indiaas & Midden-Oosten",s:"Curry, dosa, shawarma"},
+    {v:"any",t:"Verras me",s:"Alles mag",wide:true}]},
+  {key:"hunger",title:"Hoeveel honger heb je?",opts:[
+    {v:0,t:"Snackje",s:"Iets kleins"},{v:1,t:"Normaal",s:"Gewone maaltijd"},
+    {v:2,t:"Uitgehongerd",s:"Grote portie, graag",wide:true}]},
+  {key:"heavy",title:"Licht of comfort?",opts:[
+    {v:0,t:"Licht & fris",s:"Gezond voelen"},{v:2,t:"Vet & lekker",s:"Troosteten"},
+    {v:1,t:"Maakt niet uit",s:"Ergens ertussenin",wide:true}]},
+  {key:"spicy",title:"Hoe pittig?",opts:[
+    {v:0,t:"Niet pittig",s:"Mai phet"},{v:1,t:"Beetje",s:"Phet nit noi"},
+    {v:2,t:"Vuur",s:"Phet mak mak",wide:true}]},
+  {key:"price",title:"Wat is je budget per persoon?",opts:[
+    {v:1,t:"฿",s:"Tot ฿150"},{v:2,t:"฿฿",s:"฿150 – ฿350"},
+    {v:3,t:"฿฿฿",s:"Boven ฿350",wide:true}]},
+  {key:"diet",title:"Dieetwensen?",opts:[
+    {v:"none",t:"Geen",s:"Ik eet alles"},{v:"veg",t:"Vegetarisch",s:"Geen vlees of vis"},
+    {v:"halal",t:"Halal",s:"Geen varkensvlees",wide:true}]},
+];
+
+const state = {step:-1, answers:{}, reviews:{}, profiles:{}, uid:null, canWrite:false, db:null, assets:null, user:null, dbState:"loading", openForm:null};
+const $view = document.getElementById("view");
+
+function el(tag, attrs={}, ...kids){
+  const n = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs)){
+    if (k==="class") n.className=v;
+    else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+    else if (v!==false && v!=null) n.setAttribute(k, v===true?"":v);
+  }
+  for (const k of kids.flat()) if (k!=null && k!==false) n.append(k.nodeType ? k : document.createTextNode(String(k)));
+  return n;
+}
+
+/* ---------- Reviews helpers ---------- */
+function allReviews(){
+  const out=[];
+  for (const [uid,doc] of Object.entries(state.reviews)){
+    const items = (doc && typeof doc.items==="object" && doc.items) || {};
+    for (const [rid,r] of Object.entries(items)){
+      if (!r || typeof r!=="object") continue;
+      const stars = Math.max(1, Math.min(5, Math.round(Number(r.stars)||0)));
+      if (!RESTAURANTS.find(x=>x.id===rid)) continue;
+      out.push({uid, rid, stars, text:String(r.text||"").slice(0,600), dish:String(r.dish||"").slice(0,80), photo:safePhoto(r), at:Number(r.at)||0});
+    }
+  }
+  return out.sort((a,b)=>b.at-a.at);
+}
+function safePhoto(r){
+  if (typeof r.photo==="string" && /^[a-f0-9]{32}$/i.test(r.photo)) return "/_blob/"+r.photo;
+  if (typeof r.photoInline==="string" && /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(r.photoInline)) return r.photoInline;
+  return null;
+}
+function statsFor(rid){
+  const rs = allReviews().filter(r=>r.rid===rid);
+  if (!rs.length) return {n:0, avg:null, list:[]};
+  return {n:rs.length, avg:rs.reduce((s,r)=>s+r.stars,0)/rs.length, list:rs};
+}
+const starStr = n => "★".repeat(n) + "☆".repeat(5-n);
+function whoName(uid){ return (state.profiles[uid] && state.profiles[uid].name) || "Grabkeuze-gebruiker"; }
+function timeAgo(t){
+  if (!t) return "";
+  const d = Math.floor((Date.now()-t)/86400000);
+  return d<=0 ? "vandaag" : d===1 ? "gisteren" : d<31 ? d+" dagen geleden" : new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"short"});
+}
+
+/* ---------- Scoring ---------- */
+function scoreAll(){
+  const a = state.answers;
+  return RESTAURANTS.map(r=>{
+    let s=0, why=[];
+    if (a.diet==="veg" && !r.veg) return null;
+    if (a.diet==="halal" && !r.halal) return null;
+    if (a.cuisine==="any") s+=20; else if (r.cuisine===a.cuisine){s+=35; why.push("de keuken die je zocht");}
+    const sp = 2-Math.abs(r.spicy-a.spicy); s+=sp*8; if (sp===2) why.push(["mild","licht pittig","lekker heet"][r.spicy]);
+    if (a.heavy===1) s+=12; else { const hv=2-Math.abs(r.heavy-a.heavy); s+=hv*8; if (hv===2) why.push(a.heavy===0?"licht en fris":"echt comfortfood"); }
+    const hu=2-Math.abs(r.size-a.hunger); s+=hu*6; if (hu===2) why.push(["kleine portie","normale portie","grote portie"][r.size]);
+    if (r.price<=a.price){ s+=12; if (r.price<a.price) s+=2; why.push("past in je budget"); } else s-=14*(r.price-a.price);
+    const st = statsFor(r.id);
+    if (st.n){ s += (st.avg-3)*5 + Math.min(st.n,5); if (st.avg>=4) why.push(`klanten geven ${st.avg.toFixed(1)}★`); }
+    return {r, s, why, st};
+  }).filter(Boolean).sort((x,y)=>y.s-x.s);
+}
+
+/* ---------- Views ---------- */
+function render(){
+  $view.replaceChildren(state.step<0 ? viewStart() : state.step<QUESTIONS.length ? viewQuestion() : viewResults());
+}
+
+function reviewWall(list){
+  if (state.dbState==="loading") return el("div",{class:"empty"},"Klantreviews laden…");
+  if (state.dbState==="off") return el("div",{class:"empty"},"Klantreviews zijn hier niet beschikbaar. Open de app ingelogd op claude.ai om reviews te lezen en te schrijven.");
+  if (state.dbState==="slow" && !list.length) return el("div",{class:"empty"},"Reviews zijn nog niet bereikbaar. Probeer het straks opnieuw.");
+  if (!list.length) return el("div",{class:"empty"},"Nog geen reviews. Bestel iets via de quiz en laat als eerste weten hoe het was, met een foto van je eten.");
+  return el("div",{class:"wall"}, list.slice(0,12).map(rv=>{
+    const r = RESTAURANTS.find(x=>x.id===rv.rid);
+    return el("article",{class:"wcard"},
+      rv.photo ? el("img",{src:rv.photo,alt:"Foto van "+(rv.dish||r.dish),loading:"lazy",onerror:e=>e.target.replaceWith(el("div",{class:"noimg"},r.name))}) : el("div",{class:"noimg"},r.name),
+      el("div",{class:"wb"},
+        el("span",{class:"stars","aria-label":rv.stars+" van 5 sterren"},starStr(rv.stars)),
+        el("h3",{}, r.name),
+        rv.text ? el("p",{},"“"+rv.text+"”") : null,
+        el("span",{class:"who"}, whoName(rv.uid)+" · "+timeAgo(rv.at))));
+  }));
+}
+
+function viewStart(){
+  const recent = allReviews();
+  return el("div",{class:"q",style:"gap:24px"},
+    el("section",{class:"hero"},
+      el("span",{class:"eyebrow"},"Geen 20 minuten scrollen meer"),
+      el("h1",{},"Wat ga je vanavond bestellen?"),
+      el("p",{class:"muted"},"Zes korte vragen. Daarna krijg je de restaurants op Grab die het best passen bij je trek, je budget en hoe pittig je het wilt."),
+      el("button",{class:"btn",onclick:()=>{state.step=0;state.answers={};render();}},"Start de quiz")),
+    el("section",{class:"q"},
+      el("div",{class:"navrow"}, el("h2",{},"Wat klanten zeggen"), recent.length? el("span",{class:"pill"},recent.length+" reviews"):null),
+      reviewWall(recent)));
+}
+
+function viewQuestion(){
+  const q = QUESTIONS[state.step];
+  return el("section",{class:"q"},
+    el("div",{class:"progress","aria-label":`Vraag ${state.step+1} van ${QUESTIONS.length}`}, QUESTIONS.map((_,i)=>el("i",{class:i<=state.step?"on":""}))),
+    el("span",{class:"eyebrow"},`Vraag ${state.step+1} van ${QUESTIONS.length}`),
+    el("h2",{},q.title),
+    el("div",{class:"opts"}, q.opts.map(o=>el("button",{class:"opt"+(o.wide?" wide":""),onclick:()=>{state.answers[q.key]=o.v;state.step++;render();window.scrollTo(0,0);}},
+      el("strong",{},o.t), el("span",{},o.s)))),
+    el("div",{class:"navrow"},
+      el("button",{class:"linkbtn",onclick:()=>{state.step--;render();}}, state.step===0?"Terug naar start":"Vorige vraag")));
+}
+
+function viewResults(){
+  const ranked = scoreAll().slice(0,5);
+  const top = ranked[0]?.s || 1;
+  return el("section",{class:"q"},
+    el("span",{class:"eyebrow"},"Jouw top 5"),
+    el("h2",{}, ranked.length ? "Dit zou ik bestellen" : "Geen match gevonden"),
+    ranked.length ? null : el("p",{class:"muted"},"Probeer een ruimer budget of een andere keuken."),
+    ranked.map((x,i)=>ticket(x,i,top)),
+    el("div",{class:"actions"},
+      el("button",{class:"btn ghost",onclick:()=>{state.step=0;state.answers={};render();}},"Opnieuw"),
+      el("button",{class:"btn ghost",onclick:()=>{state.step=-1;render();}},"Alle reviews")));
+}
+
+function ticket({r,why,s,st},i,top){
+  const pct = Math.max(40, Math.min(99, Math.round(s/top*(i===0?96:92))));
+  const price = "฿".repeat(r.price);
+  const copyBtn = el("button",{class:"btn small",onclick:async e=>{
+    const b=e.currentTarget;
+    try{ await navigator.clipboard.writeText(r.name); b.textContent="Naam gekopieerd"; }
+    catch{ b.textContent=r.name; }
+  }},"Kopieer naam voor Grab");
+  const card = el("article",{class:"ticket"+(i===0?" best":"")},
+    el("div",{class:"trow"},
+      el("div",{},
+        i===0 ? el("span",{class:"eyebrow"},"Beste match") : null,
+        el("h3",{},r.name),
+        el("p",{class:"muted",style:"font-size:.85rem"}, r.area+" · "+price)),
+      el("div",{class:"match"}, pct+"%", el("small",{},"match"))),
+    el("p",{class:"dish"}, el("b",{},"Bestel: "), r.dish),
+    el("div",{class:"chips"},
+      st.n ? el("span",{class:"pill red"}, "★ "+st.avg.toFixed(1)+" · "+st.n+(st.n===1?" review":" reviews")) : el("span",{class:"pill red"},"Nog geen reviews"),
+      r.tags.map(t=>el("span",{class:"pill"},t))),
+    why.length ? el("p",{class:"why"},"Waarom: "+why.slice(0,3).join(", ")+".") : null,
+    el("div",{class:"actions"}, copyBtn,
+      el("a",{class:"btn small ghost",href:"https://food.grab.com/th/en/restaurants",target:"_blank",rel:"noopener",style:"text-decoration:none"},"Open GrabFood"),
+      state.dbState==="ready" ? el("button",{class:"btn small ghost",onclick:()=>{state.openForm=state.openForm===r.id?null:r.id;render();}}, myReview(r.id)?"Review aanpassen":"Review + foto") : null),
+    st.list.slice(0,3).map(rv=>el("div",{class:"rev"},
+      rv.photo ? el("img",{src:rv.photo,alt:"Klantfoto",loading:"lazy",onerror:e=>e.target.remove()}) : null,
+      el("div",{},
+        el("span",{class:"stars"},starStr(rv.stars)),
+        rv.text ? el("p",{},rv.text) : null,
+        el("span",{class:"who"}, whoName(rv.uid)+(rv.dish?" · "+rv.dish:"")+" · "+timeAgo(rv.at))))));
+  if (state.openForm===r.id) card.append(reviewForm(r));
+  return card;
+}
+
+function myReview(rid){
+  const d = state.uid && state.reviews[state.uid];
+  return d && d.items && d.items[rid];
+}
+
+/* ---------- Review form ---------- */
+function reviewForm(r){
+  const prev = myReview(r.id) || {};
+  let stars = Number(prev.stars)||0, file=null;
+  const starBtns = [1,2,3,4,5].map(n=>el("button",{type:"button","aria-label":n+" sterren",onclick:()=>{stars=n;paint();}},"★"));
+  const paint=()=>starBtns.forEach((b,i)=>b.classList.toggle("on",i<stars));
+  paint();
+  const dish = el("input",{type:"text",id:"rv-dish-"+r.id,maxlength:"80",placeholder:r.dish});
+  dish.value = prev.dish||"";
+  const text = el("textarea",{id:"rv-text-"+r.id,maxlength:"600",placeholder:"Hoe was het? Portie, smaak, bezorging…"});
+  text.value = prev.text||"";
+  const prevImg = el("img",{class:"photo-prev",alt:"Voorbeeld van je foto",hidden:true});
+  const fileIn = el("input",{type:"file",id:"rv-photo-"+r.id,accept:"image/*",onchange:e=>{
+    file = e.target.files[0]||null;
+    if (file){ prevImg.src=URL.createObjectURL(file); prevImg.hidden=false; } else prevImg.hidden=true;
+  }});
+  const status = el("p",{class:"status",role:"status"});
+  const submit = el("button",{class:"btn",type:"submit"},"Review plaatsen");
+  const form = el("form",{class:"review",onsubmit:async e=>{
+    e.preventDefault();
+    if (!stars){ status.className="status err"; status.textContent="Kies eerst 1 tot 5 sterren."; return; }
+    submit.disabled=true; status.className="status"; status.textContent=file?"Foto uploaden…":"Opslaan…";
+    try{
+      const item = {stars, text:text.value.trim().slice(0,600), dish:dish.value.trim().slice(0,80), at:Date.now()};
+      if (prev.photo) item.photo=prev.photo;
+      if (prev.photoInline) item.photoInline=prev.photoInline;
+      if (file){
+        const jpg = await shrink(file, state.assets?1280:480, state.assets?.85:.6);
+        delete item.photo; delete item.photoInline;
+        if (state.assets){ const up = await state.assets.upload(jpg,{type:"image/jpeg"}); item.photo = up.id; }
+        else item.photoInline = await blobToDataURL(jpg);
+      }
+      await saveReview(r.id, item);
+      state.openForm=null; render();
+    }catch(err){
+      submit.disabled=false; status.className="status err";
+      status.textContent = err && err.code==="too_large" ? "Die foto is te groot. Kies een kleinere." :
+        err && err.code==="quota_exceeded" ? "De opslag voor reviews is vol." :
+        err && err.code==="invalid_argument" ? "Je hebt geen schrijfrechten op deze app. Vraag de eigenaar om je als Contributor toe te voegen." :
+        "Opslaan lukte niet. Probeer het opnieuw.";
+    }
+  }},
+    el("div",{}, el("label",{},"Jouw beoordeling"), el("div",{class:"starpick"},starBtns)),
+    el("div",{}, el("label",{for:"rv-dish-"+r.id},"Wat heb je besteld?"), dish),
+    el("div",{}, el("label",{for:"rv-text-"+r.id},"Je ervaring"), text),
+    el("div",{}, el("label",{for:"rv-photo-"+r.id},"Foto van je eten"), fileIn),
+    prevImg,
+    el("p",{class:"note"},"Je review en foto zijn zichtbaar voor andere gebruikers van Grabkeuze."),
+    submit, status);
+  return form;
+}
+
+function shrink(file, max, q){
+  return new Promise((res,rej)=>{
+    const img = new Image();
+    img.onload=()=>{
+      const sc = Math.min(1, max/Math.max(img.width,img.height));
+      const c = document.createElement("canvas"); c.width=Math.round(img.width*sc); c.height=Math.round(img.height*sc);
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+      c.toBlob(b=>b?res(b):rej(new Error("encode")),"image/jpeg",q);
+    };
+    img.onerror=()=>rej(new Error("Geen geldige afbeelding"));
+    img.src = URL.createObjectURL(file);
+  });
+}
+const blobToDataURL = b => new Promise(res=>{const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.readAsDataURL(b);});
+
+let writing = Promise.resolve();
+function saveReview(rid, item){
+  const mine = state.reviews[state.uid] || {items:{}};
+  const items = Object.assign({}, mine.items||{}, {[rid]:item});
+  writing = writing.catch(()=>{}).then(()=>state.db.doc("reviews/"+state.uid).set({items}));
+  return writing;
+}
+
+/* ---------- Boot ---------- */
+render();
+(async ()=>{
+  if (!window.claude || !window.claude.use){ state.dbState="off"; render(); return; }
+  const [db, user, assets] = await Promise.all([claude.use("db"), claude.use("user"), claude.use("assets")]);
+  state.db=db; state.user=user; state.assets=assets;
+  if (!db){ state.dbState="off"; render(); return; }
+  state.uid = user ? await user.id() : null;
+  const timer = setTimeout(()=>{ if(state.dbState==="loading"){state.dbState="slow";render();} },10000);
+  db.collection("reviews").onSnapshot(async snap=>{
+    const next={}; snap.docs.forEach(d=>{ if(d.exists) next[d.id]=d.data(); });
+    state.reviews=next;
+    if (!snap.metadata.fromCache){ clearTimeout(timer); }
+    state.dbState = state.uid ? "ready" : "readonly";
+    if (user){ try{ state.profiles = await user.profiles(Object.keys(next)); }catch{} }
+    if (!document.querySelector("form.review")) render();
+  }, ()=>{ clearTimeout(timer); state.dbState="slow"; render(); });
+})();
+</script>
